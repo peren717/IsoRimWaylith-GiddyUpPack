@@ -20,19 +20,38 @@ namespace IsoRimGiddyUpPackZ
 
         static PackZ()
         {
+            Harmony h = new Harmony("peren.isorimwaylith.giddyuppack.z");
             try
             {
                 MethodInfo find = AccessTools.Method("GiddyUp.MountUtility:FindPlaceToDismount");
                 if (find == null)
                 {
                     Log.Warning(Tag + "Giddy-Up's MountUtility.FindPlaceToDismount not found: parking is left as Giddy-Up does it.");
-                    return;
                 }
-                new Harmony("peren.isorimwaylith.giddyuppack.z").Patch(find, postfix: new HarmonyMethod(typeof(Parking), nameof(Parking.Postfix)));
+                else
+                {
+                    h.Patch(find, postfix: new HarmonyMethod(typeof(Parking), nameof(Parking.Postfix)));
+                }
             }
             catch (Exception e)
             {
                 Log.Error(Tag + "Setup failed (parking is left as Giddy-Up does it): " + e);
+            }
+            // Riding between floors (AutoMount): ProjectZ Api 2 (floor queries); with an older IsoRimZ Giddy-Up rides as before.
+            try
+            {
+                if (ProjectZ.Api.Version < 2)
+                {
+                    Log.Warning(Tag + "IsoRimZ is older than Api 2: colonists may still mount up for short trips between floors.");
+                }
+                else if (!AutoMount.Init(h))
+                {
+                    Log.Warning(Tag + "Giddy-Up's MountUtility.TryAutoMount or IsMountable not found: riding between floors is left as Giddy-Up does it.");
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(Tag + "Setup failed (riding between floors is left as Giddy-Up does it): " + e);
             }
         }
     }
