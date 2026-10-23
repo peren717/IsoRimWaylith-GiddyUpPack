@@ -46,7 +46,7 @@ namespace IsoRimGiddyUpPackZ
                 }
                 else if (!AutoMount.Init(h))
                 {
-                    Log.Warning(Tag + "Giddy-Up's MountUtility.TryAutoMount or IsMountable not found: riding between floors is left as Giddy-Up does it.");
+                    Log.Warning(Tag + "Giddy-Up's MountUtility.TryAutoMount or GetBestAnimal not found (or no distance to measure): riding between floors is left as Giddy-Up does it.");
                 }
             }
             catch (Exception e)
